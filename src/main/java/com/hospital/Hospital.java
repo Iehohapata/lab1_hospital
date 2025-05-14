@@ -10,11 +10,22 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hospital.Appointment.Status;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(using = HospitalSerializer.class)
+@JsonDeserialize(using = HospitalDeserializer.class)
 public class Hospital {
+    @JsonProperty("doctors")
     private HashMap<Long, Doctor> doctors;
+
+    @JsonProperty("patients")
     private HashMap<Long, Patient> patients;
+
     private Long doctorIdCounter = 1l;
     private Long patientIdCounter = 1l;
 
@@ -30,6 +41,14 @@ public class Hospital {
         return doctors.values().stream()
                 .filter(doctor -> doctor.getSpecialization() == specialty)
                 .collect(Collectors.toList());
+    }
+
+    public void addDoctor(Doctor doctor) {
+        doctors.put(doctor.getId(), doctor);
+    }
+
+    public void addPatient(Patient patient) {
+        patients.put(patient.getId(), patient);
     }
 
     public Appointment createNearestAvailableAppointment(Patient patient, Doctor doctor) {

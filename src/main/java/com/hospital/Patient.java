@@ -3,6 +3,12 @@ package com.hospital;
 import java.time.LocalDate;
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Patient extends BusyHuman {
     private Long id;
     private String firstName;
@@ -10,7 +16,15 @@ public class Patient extends BusyHuman {
     private LocalDate dateOfBirth;
     private List<Appointment> appointments = new ArrayList<>();
 
-    public Patient(Long id, String firstName, String lastName, LocalDate dateOfBirth) {
+    public Patient() {
+    }
+
+    @JsonCreator
+    public Patient(
+            @JsonProperty("id") Long id,
+            @JsonProperty("firstName") String firstName,
+            @JsonProperty("lastName") String lastName,
+            @JsonProperty("dateOfBirth") LocalDate dateOfBirth) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

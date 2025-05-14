@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Appointment {
     private Doctor doctor;
     private Patient patient;
@@ -15,7 +18,10 @@ public class Appointment {
     public enum Status {
         ACTIVE,
         CLOSED,
-        CANCELED
+        CANCELLED
+    }
+
+    public Appointment() {
     }
 
     public Appointment(Doctor doctor, Patient patient, LocalDate date,

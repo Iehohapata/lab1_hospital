@@ -3,6 +3,12 @@ package com.hospital;
 import java.time.LocalTime;
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Doctor extends BusyHuman {
     private Long id;
     private String firstName;
@@ -12,9 +18,17 @@ public class Doctor extends BusyHuman {
     private LocalTime workEnd;
     private List<Appointment> appointments = new ArrayList<>();
 
-    public Doctor(Long id, String firstName, String lastName,
-            MedicalSpecialty specialization,
-            LocalTime workStart, LocalTime workEnd) {
+    public Doctor() {
+    }
+
+    @JsonCreator
+    public Doctor(
+            @JsonProperty("id") Long id,
+            @JsonProperty("firstName") String firstName,
+            @JsonProperty("lastName") String lastName,
+            @JsonProperty("specialization") MedicalSpecialty specialization,
+            @JsonProperty("workStart") LocalTime workStart,
+            @JsonProperty("workEnd") LocalTime workEnd) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -96,8 +110,8 @@ public class Doctor extends BusyHuman {
     }
 
     public boolean isAppointmentWithinWorkingHours(Appointment appointment) {
-        return appointment.getStart().isBefore(workStart)
-                || appointment.getEnd().isAfter(workEnd);
+        return appointment.getStart().isAfter(workStart)
+                && appointment.getEnd().isBefore(workEnd);
     }
 
     @Override

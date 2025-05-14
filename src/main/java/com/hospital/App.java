@@ -1,5 +1,6 @@
 package com.hospital;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
@@ -7,6 +8,7 @@ import java.util.Scanner;
 
 public class App {
     private static final Scanner scanner = new Scanner(System.in);
+    private static final HospitalFileIO jsonHandler = new HospitalFileIO();
     private static Hospital hospital = new Hospital();
     private static final String OPTION_LIST = """
                 <-- Функціональності -->
@@ -29,6 +31,8 @@ public class App {
                 14. Експорт з JSON
                 15. Імпорт у JSON
             """;
+    private static final String defaultFileImportPath = "src/main/resources/example.json";
+    private static final String defaultFileExportPath = "src/main/resources/exported.json";
 
     public static void main(String[] args) {
         boolean running = true;
@@ -49,6 +53,8 @@ public class App {
                 case "11" -> handleListDoctors();
                 case "12" -> handleUpdateDoctor();
                 case "13" -> handleDeleteDoctor();
+                case "14" -> handleFileRead();
+                case "15" -> handleFileWrite();
                 case "0" -> running = false;
                 default -> printError();
             }
@@ -238,6 +244,36 @@ public class App {
 
     public static void handleReport() {
         System.out.println(hospital.generateFullReport());
+    }
+
+    public static void handleFileRead() {
+        String filePath = getConsoleInput("Вкажіть шлях до файлу(Enter: resources/example.json): ");
+
+        if (filePath.isBlank() || filePath.isEmpty()) {
+            filePath = defaultFileImportPath;
+        }
+
+        try {
+            hospital = jsonHandler.loadFromFile(filePath);
+            System.out.println("Дані зчитані успішно\n");
+        } catch (IOException e) {
+            System.out.println("Не вдалось коректно зчитати вкзаний файл\n");
+        }
+    }
+
+    public static void handleFileWrite() {
+        String filePath = getConsoleInput("Вкажіть шлях до файлу(Enter: resources/exported.json): ");
+
+        if (filePath.isBlank() || filePath.isEmpty()) {
+            filePath = defaultFileExportPath;
+        }
+
+        try {
+            jsonHandler.saveToFile(hospital, filePath);
+            System.out.println("Дані записано успішно\n");
+        } catch (IOException e) {
+            System.out.println("Помилка запису даних");
+        }
     }
 
     private static int getValidSpecialityInput() {
