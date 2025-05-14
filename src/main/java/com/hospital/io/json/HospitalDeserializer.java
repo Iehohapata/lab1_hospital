@@ -1,4 +1,4 @@
-package com.hospital;
+package com.hospital.io.json;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -9,6 +9,10 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.hospital.core.Appointment;
+import com.hospital.core.Doctor;
+import com.hospital.core.Hospital;
+import com.hospital.core.Patient;
 
 public class HospitalDeserializer extends StdDeserializer<Hospital> {
 

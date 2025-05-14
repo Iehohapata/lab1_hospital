@@ -1,4 +1,4 @@
-package com.hospital;
+package com.hospital.core;
 
 import java.time.LocalTime;
 

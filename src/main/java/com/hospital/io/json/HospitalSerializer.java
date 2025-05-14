@@ -1,16 +1,36 @@
-package com.hospital;
+package com.hospital.io.json;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.hospital.core.Appointment;
+import com.hospital.core.Doctor;
+import com.hospital.core.Hospital;
+import com.hospital.core.Patient;
 
 public class HospitalSerializer extends StdSerializer<Hospital> {
+    private Comparator<Appointment> comparator = null;
+
     public HospitalSerializer() {
         super(Hospital.class);
+    }
+
+    public HospitalSerializer(Comparator<Appointment> comparator) {
+        this();
+        this.comparator = comparator;
+    }
+
+    public Comparator<Appointment> getComparator() {
+        return comparator;
+    }
+
+    public void setCompatator(Comparator<Appointment> comparator) {
+        this.comparator = comparator;
     }
 
     @Override
@@ -49,6 +69,11 @@ public class HospitalSerializer extends StdSerializer<Hospital> {
         List<Appointment> appointments = hospital.getAllDoctors().stream()
                 .flatMap(doctor -> doctor.getAppointments().stream())
                 .collect(Collectors.toList());
+
+        if (comparator != null) {
+            appointments.sort(comparator);
+        }
+
         for (Appointment appointment : appointments) {
             jgen.writeStartObject();
             jgen.writeNumberField("doctor", appointment.getDoctor().getId());

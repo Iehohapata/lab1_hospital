@@ -6,6 +6,14 @@ import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import com.hospital.core.Appointment;
+import com.hospital.core.Doctor;
+import com.hospital.core.Hospital;
+import com.hospital.core.MedicalSpecialty;
+import com.hospital.core.Patient;
+import com.hospital.io.json.AppointmentComparator;
+import com.hospital.io.json.HospitalFileIO;
+
 public class App {
     private static final Scanner scanner = new Scanner(System.in);
     private static final HospitalFileIO jsonHandler = new HospitalFileIO();
@@ -268,8 +276,10 @@ public class App {
             filePath = defaultFileExportPath;
         }
 
+        AppointmentComparator sortingStrategy = getValidAppointmentComparator();
+
         try {
-            jsonHandler.saveToFile(hospital, filePath);
+            jsonHandler.saveToFile(hospital, filePath, sortingStrategy.getComparator());
             System.out.println("Дані записано успішно\n");
         } catch (IOException e) {
             System.out.println("Помилка запису даних");
@@ -295,6 +305,31 @@ public class App {
         }
 
         return option;
+    }
+
+    private static AppointmentComparator getValidAppointmentComparator() {
+        AppointmentComparator[] comparators = AppointmentComparator.values();
+
+        for (int i = 0; i < comparators.length; i++) {
+            System.out.printf("%d — %s%n", i + 1, comparators[i].getDisplayName());
+        }
+
+        int option;
+        while (true) {
+            try {
+                String input = getConsoleInput("Оберіть критерій сортування: ");
+                option = Integer.parseInt(input);
+                if (option < 1 || option > comparators.length) {
+                    printError();
+                    continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                printError();
+            }
+        }
+
+        return comparators[option - 1];
     }
 
     private static void displayMedicalSpecialitiesMenu() {

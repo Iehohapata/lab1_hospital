@@ -1,10 +1,9 @@
-package com.hospital;
+package com.hospital.core;
 
 import java.time.LocalTime;
 import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -110,8 +109,8 @@ public class Doctor extends BusyHuman {
     }
 
     public boolean isAppointmentWithinWorkingHours(Appointment appointment) {
-        return appointment.getStart().isAfter(workStart)
-                && appointment.getEnd().isBefore(workEnd);
+        return !appointment.getStart().isBefore(workStart)
+                && !appointment.getEnd().isAfter(workEnd);
     }
 
     @Override

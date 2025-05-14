@@ -1,4 +1,4 @@
-package com.hospital;
+package com.hospital.core;
 
 public enum MedicalSpecialty {
     CARDIOLOGIST("Кардіолог"),

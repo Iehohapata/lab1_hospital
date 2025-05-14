@@ -1,4 +1,4 @@
-package com.hospital;
+package com.hospital.core;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -14,7 +14,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.hospital.Appointment.Status;
+import com.hospital.core.Appointment.Status;
+import com.hospital.io.json.HospitalDeserializer;
+import com.hospital.io.json.HospitalSerializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(using = HospitalSerializer.class)
